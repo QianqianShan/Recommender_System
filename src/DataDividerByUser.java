@@ -29,7 +29,6 @@ public class DataDividerByUser {
 			/* outputValue = movieID:rating */
 			String outputValue = user_movie_rating[1] + ":" + user_movie_rating[2];
 			context.write(new IntWritable(Integer.parseInt(outputKey)), new Text(outputValue));
-			//divide data by user
 		}
 	}
 
@@ -52,7 +51,7 @@ public class DataDividerByUser {
 			context.write(key, new Text(sb.toString().replaceFirst(",", "")));
 
 			/*
-			* user1 \t movie1:3.5, movie2:4 ...
+			* Output example: user1 \t movie1:3.5, movie2:4 ...
 			* */
 
 		}

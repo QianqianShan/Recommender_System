@@ -1,5 +1,6 @@
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -12,20 +13,26 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/* Normalize co-occurence matrix */
 public class Normalize {
 
     public static class NormalizeMapper extends Mapper<LongWritable, Text, Text, Text> {
 
-        // map method
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
-            /*Input: movieA:movieB \t relation
+            /*
+              Input: movieA:movieB \t relation
               Output: relationship list for movieA
               Outputkey: movieA
-              Outputvalue: movieB = relation
+              Outputvalue: movieB=relation
             */
             String[] movie_relation = value.toString().trim().split("\t");
+
+            if (movie_relation.length < 2) {
+                return;
+            }
+
             String[] movieA = movie_relation[0].split(":")[0];
             String[] movieB = movie_relation[0].split(":")[1];
             String[] relation = movie_relation[1];
@@ -34,7 +41,6 @@ public class Normalize {
     }
 
     public static class NormalizeReducer extends Reducer<Text, Text, Text, Text> {
-        // reduce method
         @Override
         public void reduce(Text key, Iterable<Text> values, Context context)
                 throws IOException, InterruptedException {
@@ -45,26 +51,31 @@ public class Normalize {
              Outputkey: movieB
              Outputvalue: movieA = normalized relative relation
             */
+
+            /* Compute denominator of each row */
             int denominator = 0;
             Map<String, Integer> map = new HashMap<String, Integer>();
             for (Text value:values) {
-                /*value: movieB = relation */
-                String movieB = value.split("=")[0];
-                int relation = Integer.parseInt(value.toString().split("=")[1]);
+                /* value: movieB = relation */
+                String[] movie_relation = value.toString().split("=");
+                String movieB = movie_relation[0];
+                int relation = Integer.parseInt(movie_relation[1]);
                 map.put(movieB, relation);
                 denominator += relation;
             }
 
+            /* Normalization */
             for (Map.Entry<String, Integer> entry:map.entrySet()) {
-                // entry key: movieB
-                // entryValue: relation
+                /* Outputkey: movieB
+                   OutputValue: relation
+                 */
                 String outputKey = entry.getKey();
-                double normalizeRelation = (double) entry.getValue() /denominator;
-                String outputValue = key.toString() + "=" + normalizeRelation;
+                double normalizedRelation = (double) entry.getValue() /denominator;
+                String outputValue = key.toString() + "=" + normalizedRelation;
                 context.write(new Text(outputKey), new Text(outputValue));
             }
 
-            /* movieB \t movieA = 0.875 */
+            /* Output example: movieB \t movieA = 0.875 */
         }
     }
 

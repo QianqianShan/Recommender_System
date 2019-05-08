@@ -11,29 +11,33 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import java.io.IOException;
 
-
+/* Add the element-wise multiplications in Multiplication.java by movieID */
 public class Sum {
 
     public static class SumMapper extends Mapper<LongWritable, Text, Text, DoubleWritable> {
 
-        // map method
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-
-            //pass data to reducer
-            String[] key_value = value.toString().split("\t");
+            /*
+            * Input: userID:movieID \t subSum
+			  OutputKey: userID:movieID
+			  OutputValue: subSum
+            * */
+            String[] key_value = value.toString().trim().split("\t");
             context.write(new Text(key_value[0]), new DoubleWritable(Double.parseDouble(key_value[1])));
         }
     }
 
     public static class SumReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
-        // reduce method
         @Override
         public void reduce(Text key, Iterable<DoubleWritable> values, Context context)
                 throws IOException, InterruptedException {
 
-            //user:movie relation
-           //calculate the sum
+            /*
+            Inputkey: userID:movieID
+            InputValue: subSum iterable
+            Output: sum over each unique usrID:movieID
+           */
             double sum = 0;
             for (DoubleWritable value:values) {
                 sum += value.get();
