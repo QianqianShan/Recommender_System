@@ -22,7 +22,7 @@ public class CoOccurrenceMatrixGenerator {
 			   Output value: 1
 			Calculate each user rating list: <movieA, movieB>
 			*/
-			String[] user_movies = value.toString().trim().split()("\t");
+			String[] user_movies = value.toString().trim().split("\t");
 			/* if there is only userID and no ratings */
 			if (user_movies.length < 2) {
 				/* add log to record userIDs without any ratings */
@@ -35,9 +35,9 @@ public class CoOccurrenceMatrixGenerator {
 				String movieA = movies[i].trim().split(";")[0];
 				for (int j = 0; j < movies.length; j++) {
 					String movieB = movies[j].trim().split(":")[0];
+					String outputKey = movieA + ":" + movieB;
+					context.write(new Text(outputKey), new IntWritable(1));
 				}
-				String outputKey = movieA + ":" + movieB;
-				context.write(new Text(outputKey), new IntWritable(1));
 			}
 
 

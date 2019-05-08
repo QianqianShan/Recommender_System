@@ -33,9 +33,9 @@ public class Normalize {
                 return;
             }
 
-            String[] movieA = movie_relation[0].split(":")[0];
-            String[] movieB = movie_relation[0].split(":")[1];
-            String[] relation = movie_relation[1];
+            String movieA = movie_relation[0].split(":")[0];
+            String movieB = movie_relation[0].split(":")[1];
+            String relation = movie_relation[1];
             context.write(new Text(movieA), new Text(movieB + "=" + relation));
         }
     }

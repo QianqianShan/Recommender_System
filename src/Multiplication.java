@@ -65,7 +65,7 @@ public class Multiplication {
 			*/
 
 			Map<String, Double> relationMap = new HashMap<String, Double>();
-			Map<String, Double> ratingmap = new HashMap<String, Double>();
+			Map<String, Double> ratingMap = new HashMap<String, Double>();
 
 			/* Process relation and rating inputvalues separately */
 			for (Text value:values) {
