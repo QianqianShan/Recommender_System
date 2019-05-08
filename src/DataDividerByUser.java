@@ -11,21 +11,22 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import java.io.IOException;
 
-/* */
+/* Preprocess raw data and merge the data with the same userID together */
 public class DataDividerByUser {
 	public static class DataDividerMapper extends Mapper<LongWritable, Text, IntWritable, Text> {
 
-		// map method
 		@Override
 		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
 			/*
 			* Input: userID, movieID, rating
-			* Output key: userId
+			* Output key: userID
 			* Output value: movieID + rating
 			* */
-			String [] user_movie_rating = value.toString().trime().split(",");
+			String [] user_movie_rating = value.toString().trim().split(",");
 			String outputKey = user_movie_rating[0];
+
+			/* outputValue = movieID:rating */
 			String outputValue = user_movie_rating[1] + ":" + user_movie_rating[2];
 			context.write(new IntWritable(Integer.parseInt(outputKey)), new Text(outputValue));
 			//divide data by user
@@ -33,7 +34,7 @@ public class DataDividerByUser {
 	}
 
 	public static class DataDividerReducer extends Reducer<IntWritable, Text, IntWritable, Text> {
-		// reduce method
+		/* Merge data with the same userID */
 		@Override
 		public void reduce(IntWritable key, Iterable<Text> values, Context context)
 				throws IOException, InterruptedException {
@@ -46,13 +47,14 @@ public class DataDividerByUser {
 			for (Text value:values) {
 				sb.append("," + value.toString());
 			}
+
+			/* remove the first comma */
 			context.write(key, new Text(sb.toString().replaceFirst(",", "")));
 
 			/*
 			* user1 \t movie1:3.5, movie2:4 ...
 			* */
 
-			//merge data for one user
 		}
 	}
 
