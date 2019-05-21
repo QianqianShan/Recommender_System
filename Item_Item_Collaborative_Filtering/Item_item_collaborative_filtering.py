@@ -80,7 +80,7 @@ for i in range(M):
     sigma_i = np.sqrt(np.dot(dev_i_vals, dev_i_vals))
     
     averages.append(avg_i)
-    deviations.append(dev_i_vals)
+    deviations.append(dev_i)
     
     sl = SortedList()
     for j in range(M):
@@ -147,7 +147,7 @@ train_targets = []
 
 for (u, m), target in usermovie_rating.items():
     prediction = predict(m, u)
-    train_predictions.append(predictions)
+    train_predictions.append(prediction)
     train_targets.append(target)
 
 # prediction on test set 

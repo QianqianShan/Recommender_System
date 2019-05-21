@@ -169,7 +169,7 @@ train_targets = []
 
 for (i, m), target in usermovie_rating.items():
     prediction = predict(i, m)
-    train_predictions.append(predictions)
+    train_predictions.append(prediction)
     train_targets.append(target)
 
 # prediction on test set 
