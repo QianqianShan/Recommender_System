@@ -104,6 +104,6 @@ with open('../data/ml-20m/movie_user', 'wb') as f:
 with open('../data/ml-20m/usermovie_rating', 'wb') as f:
     pickle.dump(usermovie_rating, f)
     
-with open('../data/ml-20m/usermoive_rating_test', 'wb') as f:
+with open('../data/ml-20m/usermovie_rating_test', 'wb') as f:
     pickle.dump(usermovie_rating_test, f)
 
