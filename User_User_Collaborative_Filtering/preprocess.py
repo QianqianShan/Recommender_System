@@ -1,4 +1,4 @@
-
+# This script renames the indices of userId and movieId so they are consecutive. 
 import pandas as pd
 
 # https://www.kaggle.com/grouplens/movielens-20m-dataset
