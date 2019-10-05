@@ -65,7 +65,7 @@ averages = []
 deviations = []
 
 
-# loop through each movie to find K cloest neighbors to item i 
+# loop through each movie to find K closest neighbors to item i 
 for i in range(M):
     # users rated movie i 
     users_i = set(movie_user[i])
